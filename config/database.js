@@ -8,7 +8,7 @@ exports.connect = () => {
     .connect(MONGO_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-
+      dbName:"TMS_DB"
     })
     .then(() => {
       console.log("Successfully connected to database");

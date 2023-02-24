@@ -30,10 +30,10 @@ app.post("/api/student/register", async (req, res) => {
      // Our register logic starts here
   try {
     // Get user input
-    const { first_name, last_name,std,username, password } = req.body;
+    const { full_name,std,username, password,sub } = req.body;
    
     // Validate user input
-    if (!(username && password && first_name && last_name && std)) {
+    if (!(username && password && full_name && std && sub )) {
       res.status(400).send("All input is required");
     }
 
@@ -50,9 +50,9 @@ app.post("/api/student/register", async (req, res) => {
     
     // Create user in our database
     const user = await User.create({
-      first_name,
-      last_name,
+      full_name,
       std,
+      sub,
       username: username.toLowerCase(), // sanitize: convert username to lowercase
       password: encryptedPassword,
     });
@@ -77,7 +77,7 @@ app.post("/api/student/register", async (req, res) => {
 });
 
 // Login
-app.post("/api/student/login", auth,async (req, res) => {
+app.post("/api/student/login",auth,async (req, res) => {
 
     // Our login logic starts here
     try {
@@ -100,12 +100,13 @@ app.post("/api/student/login", auth,async (req, res) => {
             expiresIn: "2h",
           }
         );
-  
         // save user token
         user.token = token;
-  
+        req.headers["x-access-token"]=token;
         // user
         res.status(200).send("Login Successfully");
+        console.log(token);
+
       }
       res.status(400).send("Invalid Credentials");
     } catch (err) {
@@ -115,6 +116,14 @@ app.post("/api/student/login", auth,async (req, res) => {
 });
 
 // Update
-app.put("/api/student/:id", async  (req,res) =>{
+app.put("/api/student/update/:id", async  (req,res) =>{
+  const { username, password } = req.body;
+  const user = await User.findByIdAndUpdate(req.params.id, { username, password });
+  res.json(user);
+});
 
-})
+//Delete
+app.delete('/api/student/delete/:id', auth, async (req, res) => {
+  const user = await User.findByIdAndDelete(req.params.id);
+  res.json(user);
+});
