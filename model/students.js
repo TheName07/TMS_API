@@ -7,6 +7,6 @@ const userSchema = new mongoose.Schema({
   password: { type: String },
   sub:{type: Array},
   token: { type: String },
-},{collection : "Students"});
+},{collection : "Students"}); 
 
-module.exports = mongoose.model("user", userSchema);
+module.exports = mongoose.model("students", userSchema);
