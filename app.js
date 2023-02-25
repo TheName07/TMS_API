@@ -11,7 +11,7 @@ app.use(express.json());
 module.exports = app;
 
 // importing user context
-const User = require("./model/students");
+const User = require("./model/students"); 
 const Teacher = require("./model/teachers")
 // ****************************************************** Student API ******************************************************
 // Get All Student
