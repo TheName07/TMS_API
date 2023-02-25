@@ -148,7 +148,7 @@ app.post("/api/student/login",async (req, res) => {
 });
 
 // Update Student
-app.put("/api/student/update/:id",auth, async  (req,res) =>{
+app.put("/api/student/update",auth, async  (req,res) =>{
 
   try{
     const { user_id,full_name,username,std,sub } = req.body;
@@ -174,7 +174,7 @@ app.put("/api/student/update/:id",auth, async  (req,res) =>{
 });
 
 // Reset Password Student
-app.put("/api/student/resetpassword/:id",auth, async  (req,res) =>{
+app.put("/api/student/resetpassword",auth, async  (req,res) =>{
 
   try{
     const { user_id,password,new_password } = req.body;
