@@ -8,5 +8,4 @@ const userSchema = new mongoose.Schema({
   sub:{type: Array},
   token: { type: String },
 },{collection : "Students"}); 
-
 module.exports = mongoose.model("students", userSchema);

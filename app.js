@@ -11,13 +11,13 @@ app.use(express.json());
 module.exports = app;
 
 // importing user context
-const User = require("./model/students"); 
+const Student = require("./model/students"); 
 const Teacher = require("./model/teachers")
 // ****************************************************** Student API ******************************************************
 // Get All Student
 app.get("/api/students",auth ,(req, res) => {
   try{
-    User.find({},{_id : 0,password : 0,__v : 0},function(err,Users){
+    Student.find({},{_id : 0,password : 0,__v : 0},function(err,Users){
       if(err)
         throw err;
       if(Users){
@@ -48,7 +48,7 @@ app.post("/api/student/register", async (req, res) => {
 
     // check if user already exist
     // Validate if user exist in our database
-    const oldUser = await User.findOne({ username });
+    const oldUser = await Student.findOne({ username });
     var resq = {
       success : false,
       msg : "User Already Exist, Type Different Username"
@@ -61,7 +61,7 @@ app.post("/api/student/register", async (req, res) => {
     encryptedPassword = await bcrypt.hash(password, 10);
     
     // Create user in our database
-    const user = await User.create({
+    const user = await Student.create({
       full_name,
       std,
       sub,
@@ -111,7 +111,7 @@ app.post("/api/student/login",async (req, res) => {
         res.status(400).send(resq);
       }
       // Validate if user exist in our database
-      const user = await User.findOne({ username : username.toLowerCase() });
+      const user = await Student.findOne({ username : username.toLowerCase() });
   
       if (user && (await bcrypt.compare(password, user.password))) {
         // Create token
@@ -152,9 +152,9 @@ app.put("/api/student/update",auth, async  (req,res) =>{
 
   try{
     const { user_id,full_name,username,std,sub } = req.body;
-    const data = await User.findOne({ _id : user_id});
+    const data = await Student.findOne({ _id : user_id});
     if(data){
-      const user = await User.findByIdAndUpdate({ _id : user_id },{ $set :{ full_name: full_name, username:username, std: std, sub:sub}});
+      const user = await Student.findByIdAndUpdate({ _id : user_id },{ $set :{ full_name: full_name, username:username, std: std, sub:sub}});
       var resp = {
         success : true,
         msg : "Updated"
@@ -178,12 +178,12 @@ app.put("/api/student/resetpassword",auth, async  (req,res) =>{
 
   try{
     const { user_id,password,new_password } = req.body;
-    const data = await User.findOne({ _id : user_id });
+    const data = await Student.findOne({ _id : user_id });
 
     if (data && ( await bcrypt.compare(password, data.password))) {
       // New Password being encrypted
       const encryptedPassword = await bcrypt.hash(new_password, 10);
-      const user = await User.findByIdAndUpdate({ _id : user_id },{ $set :{ password : encryptedPassword }});
+      const user = await Student.findByIdAndUpdate({ _id : user_id },{ $set :{ password : encryptedPassword }});
       var resp = {
         success : true,
         msg : "Password is Updated"
@@ -206,9 +206,9 @@ app.put("/api/student/resetpassword",auth, async  (req,res) =>{
 app.delete('/api/student/delete/:id', auth, async (req, res) => {
   try{
     const { user_id} = req.body;
-    const data = await User.findOne({ _id : user_id});
+    const data = await Student.findOne({ _id : user_id});
     if(data){
-      const user = await User.findByIdAndDelete(user_id);
+      const user = await Student.findByIdAndDelete(user_id);
       res.status(200).send({success : true , msg : "Deleted"}); 
     }else{
       var resp = {
